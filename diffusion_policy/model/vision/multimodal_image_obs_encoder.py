@@ -8,7 +8,7 @@ from diffusion_policy.model.common.module_attr_mixin import ModuleAttrMixin
 from diffusion_policy.common.pytorch_util import dict_apply, replace_submodules
 
 
-class MultiImageObsEncoder(ModuleAttrMixin):
+class MultiModalObsEncoder(ModuleAttrMixin):
     def __init__(self,
             shape_meta: dict,
             rgb_model: Union[nn.Module, Dict[str,nn.Module]],
@@ -98,7 +98,7 @@ class MultiImageObsEncoder(ModuleAttrMixin):
                             pos_enc=False
                         )
                     else:
-                        this_randomizer = torchvision.transforms.CenterCrop(
+                        this_normalizer = torchvision.transforms.CenterCrop(
                             size=(h,w)
                         )
                 # configure normalizer

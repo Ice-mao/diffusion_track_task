@@ -3,12 +3,12 @@ import os
 import torch
 from diffusion_policy.dataset.pusht_image_dataset import PushTImageDataset
 
-zarr_path = os.path.expanduser('data/pusht/pusht_cchi_v7_replay.zarr')
+zarr_path = os.path.expanduser('data/test/sim_data_replay.zarr')
 
 # parameters
-pred_horizon = 16
+pred_horizon = 4
 obs_horizon = 2
-action_horizon = 8
+action_horizon = 3
 #|o|o|                             observations: 2
 #| |a|a|a|a|a|a|a|a|               actions executed: 8
 #|p|p|p|p|p|p|p|p|p|p|p|p|p|p|p|p| actions predicted: 16

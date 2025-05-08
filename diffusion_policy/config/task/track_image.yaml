@@ -7,7 +7,7 @@ shape_meta: &shape_meta
       shape: [3, 128, 128]
       type: rgb
     sonar_image:
-      shape: [1, 128, 128]
+      shape: [3, 128, 128]
       type: rgb
     agent_pos: # distance to target
       shape: [1]
