@@ -4,12 +4,12 @@ shape_meta: &shape_meta
   # acceptable types: rgb, low_dim
   obs:
     camera_image:
-      shape: [3, 128, 128]
+      shape: [3, 224, 224]
       type: rgb
     sonar_image:
       shape: [3, 128, 128]
       type: rgb
-    agent_pos: # distance to target
+    state: # distance to target
       shape: [1]
       type: low_dim
   action:
@@ -32,8 +32,8 @@ shape_meta: &shape_meta
 #   n_envs: null
 
 dataset:
-  _target_: diffusion_policy.dataset.pusht_image_dataset.PushTImageDataset
-  zarr_path: data/pusht/pusht_cchi_v7_replay.zarr
+  _target_: diffusion_policy.dataset.track_image_dataset.TrackImageDataset
+  zarr_path: data/track/track_icemao_test_replay.zarr
   horizon: ${horizon}
   pad_before: ${eval:'${n_obs_steps}-1'}
   pad_after: ${eval:'${n_action_steps}-1'}

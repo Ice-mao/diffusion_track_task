@@ -23,7 +23,7 @@ class TrackImageDataset(BaseImageDataset):
         
         super().__init__()
         self.replay_buffer = ReplayBuffer.copy_from_path(
-            zarr_path, keys=['camera_img','sonar_img', 'state', 'action'])
+            zarr_path, keys=['left_camera_img', 'right_camera_img', 'sonar_img', 'state', 'action'])
         val_mask = get_val_mask(
             n_episodes=self.replay_buffer.n_episodes, 
             val_ratio=val_ratio,
@@ -60,26 +60,32 @@ class TrackImageDataset(BaseImageDataset):
     def get_normalizer(self, mode='limits', **kwargs):
         data = {
             'action': self.replay_buffer['action'],
-            'agent_pos': self.replay_buffer['state'][...,:2]
+            'state': self.replay_buffer['state']
         }
         normalizer = LinearNormalizer()
         normalizer.fit(data=data, last_n_dims=1, mode=mode, **kwargs)
-        normalizer['image'] = get_image_range_normalizer()
+        normalizer['camera_image'] = get_image_range_normalizer()
+        normalizer['sonar_image'] = get_image_range_normalizer()
         return normalizer
 
     def __len__(self) -> int:
         return len(self.sampler)
 
     def _sample_to_data(self, sample):
-        agent_pos = sample['state'][:,:2].astype(np.float32) # (agent_posx2, block_posex3)
-        image = np.moveaxis(sample['camera_img'],-1,1)/255
-
+        left_camera_img = sample['left_camera_img']/255
+        right_camera_img = sample['right_camera_img']/255
+        sonar_img = sample['sonar_img']/255
+        sonar_img = np.repeat(sonar_img, 3, axis=1)
+        state = sample['state']
+        state = np.expand_dims(state, axis=-1) 
+        
         data = {
             'obs': {
-                'image': image, # T, 3, 96, 96
-                'agent_pos': agent_pos, # T, 2
+                'camera_image': left_camera_img,
+                'sonar_image': sonar_img,
+                'state': state,
             },
-            'action': sample['action'].astype(np.float32) # T, 2
+            'action': sample['action']
         }
         return data
     
@@ -92,8 +98,8 @@ class TrackImageDataset(BaseImageDataset):
 
 def test():
     import os
-    zarr_path = os.path.expanduser('~/dev/diffusion_policy/data/pusht/pusht_cchi_v7_replay.zarr')
-    dataset = PushTImageDataset(zarr_path, horizon=16)
+    # zarr_path = os.path.expanduser('~/dev/diffusion_policy/data/pusht/pusht_cchi_v7_replay.zarr')
+    # dataset = PushTImageDataset(zarr_path, horizon=16)
 
     # from matplotlib import pyplot as plt
     # normalizer = dataset.get_normalizer()

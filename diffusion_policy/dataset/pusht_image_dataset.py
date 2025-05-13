@@ -96,7 +96,7 @@ def test():
     dataset = PushTImageDataset(zarr_path, horizon=16)
 
     # from matplotlib import pyplot as plt
-    # normalizer = dataset.get_normalizer()
+    normalizer = dataset.get_normalizer()
     # nactions = normalizer['action'].normalize(dataset.replay_buffer['action'])
     # diff = np.diff(nactions, axis=0)
     # dists = np.linalg.norm(np.diff(nactions, axis=0), axis=-1)

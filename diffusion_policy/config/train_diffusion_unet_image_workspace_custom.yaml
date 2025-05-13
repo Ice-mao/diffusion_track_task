@@ -9,9 +9,9 @@ task_name: ${task.name}
 shape_meta: ${task.shape_meta}
 exp_name: "default"
 
-horizon: 4
+horizon: 16
 n_obs_steps: 2
-n_action_steps: 3
+n_action_steps: 8 # 1s
 n_latency_steps: 0
 dataset_obs_steps: ${n_obs_steps}
 past_action_visible: False
@@ -40,13 +40,16 @@ policy:
       _target_: builtins.dict
       camera_image:
         _target_: diffusion_policy.model.vision.model_getter.get_resnet
-        name: resnet50
+        name: resnet18
         weights: IMAGENET1K_V1
       sonar_image:
         _target_: diffusion_policy.model.vision.model_getter.get_resnet
         name: resnet18
         weights: IMAGENET1K_V1
-    resize_shape: null
+    resize_shape: 
+      _target_: builtins.dict
+      camera_image: [64, 64]
+      sonar_image: [64, 64]
     crop_shape: null
     # constant center crop
     random_crop: True
@@ -78,14 +81,14 @@ ema:
   max_value: 0.9999
 
 dataloader:
-  batch_size: 64
+  batch_size: 8
   num_workers: 4
   shuffle: True
   pin_memory: True
   persistent_workers: False
 
 val_dataloader:
-  batch_size: 64
+  batch_size: 4
   num_workers: 4
   shuffle: False
   pin_memory: True
@@ -101,8 +104,8 @@ optimizer:
 training:
   device: "cuda:0"
   seed: 42
-  debug: False
-  resume: True
+  debug: True
+  resume: False
   # optimization
   lr_scheduler: cosine
   lr_warmup_steps: 500

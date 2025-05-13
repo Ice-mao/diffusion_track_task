@@ -192,8 +192,16 @@ class DiffusionUnetImagePolicy(BaseImagePolicy):
     def compute_loss(self, batch):
         # normalize input
         assert 'valid_mask' not in batch
-        nobs = self.normalizer.normalize(batch['obs'])
-        nactions = self.normalizer['action'].normalize(batch['action'])
+        # nobs = self.normalizer.normalize(batch['obs'])
+        if isinstance(batch['obs'], dict):
+            nobs = dict()
+            for key, value in batch['obs'].items():
+                nobs[key] =  batch['obs'][key].to(dtype=torch.float32)
+        else:
+            nobs = batch['obs'].to(dtype=torch.float32)
+        # nobs = batch['obs'].to(dtype=torch.float32)
+        # nactions = self.normalizer['action'].normalize(batch['action'])
+        nactions = batch['action'].to(dtype=torch.float32)
         batch_size = nactions.shape[0]
         horizon = nactions.shape[1]
 
