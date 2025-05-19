@@ -33,7 +33,7 @@ shape_meta: &shape_meta
 
 dataset:
   _target_: diffusion_policy.dataset.track_image_dataset.TrackImageDataset
-  zarr_path: data/track/track_icemao_test_replay.zarr
+  zarr_path: data/track/track_dam_test_replay.zarr
   horizon: ${horizon}
   pad_before: ${eval:'${n_obs_steps}-1'}
   pad_after: ${eval:'${n_action_steps}-1'}
