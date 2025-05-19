@@ -81,14 +81,14 @@ ema:
   max_value: 0.9999
 
 dataloader:
-  batch_size: 8
+  batch_size: 16
   num_workers: 4
   shuffle: True
   pin_memory: True
   persistent_workers: False
 
 val_dataloader:
-  batch_size: 4
+  batch_size: 16
   num_workers: 4
   shuffle: False
   pin_memory: True
@@ -103,13 +103,13 @@ optimizer:
 
 training:
   device: "cuda:0"
-  seed: 42
-  debug: True
+  seed: 41
+  debug: False
   resume: False
   # optimization
   lr_scheduler: cosine
   lr_warmup_steps: 500
-  num_epochs: 1000
+  num_epochs: 3000
   gradient_accumulate_every: 1
   # EMA destroys performance when used with BatchNorm
   # replace BatchNorm with GroupNorm.
@@ -138,10 +138,10 @@ logging:
 
 checkpoint:
   topk:
-    monitor_key: test_mean_score
-    mode: max
+    monitor_key: val_loss
+    mode: min
     k: 5
-    format_str: 'epoch={epoch:04d}-test_mean_score={test_mean_score:.3f}.ckpt'
+    format_str: 'epoch={epoch:04d}-val_loss={val_loss:.3f}.ckpt'
   save_last_ckpt: True
   save_last_snapshot: False
 

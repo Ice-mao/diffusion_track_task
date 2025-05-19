@@ -127,7 +127,11 @@ class DiffusionUnetImagePolicy(BaseImagePolicy):
         """
         assert 'past_action' not in obs_dict # not implemented yet
         # normalize input
-        nobs = self.normalizer.normalize(obs_dict)
+        # nobs = self.normalizer.normalize(obs_dict)
+        if isinstance(obs_dict, dict):
+            nobs = dict()
+            for key, value in obs_dict.items():
+                nobs[key] =  obs_dict[key].to(dtype=torch.float32)
         value = next(iter(nobs.values()))
         B, To = value.shape[:2]
         T = self.horizon
