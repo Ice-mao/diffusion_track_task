@@ -1,6 +1,6 @@
 defaults:
   - _self_
-  - task: track_image
+  - task: track_image_openwater
 
 name: train_diffusion_unet_image
 _target_: diffusion_policy.workspace.train_diffusion_unet_image_workspace_custom.TrainDiffusionUnetImageWorkspace
@@ -48,8 +48,8 @@ policy:
         weights: IMAGENET1K_V1
     resize_shape: 
       _target_: builtins.dict
-      camera_image: [64, 64]
-      sonar_image: [64, 64]
+      camera_image: [128, 128]
+      sonar_image: [128, 128]
     crop_shape: null
     # constant center crop
     random_crop: True
@@ -81,15 +81,15 @@ ema:
   max_value: 0.9999
 
 dataloader:
-  batch_size: 16
-  num_workers: 4
+  batch_size: 128
+  num_workers: 8
   shuffle: True
   pin_memory: True
   persistent_workers: False
 
 val_dataloader:
-  batch_size: 16
-  num_workers: 4
+  batch_size: 128
+  num_workers: 8
   shuffle: False
   pin_memory: True
   persistent_workers: False
@@ -109,7 +109,7 @@ training:
   # optimization
   lr_scheduler: cosine
   lr_warmup_steps: 500
-  num_epochs: 3000
+  num_epochs: 8000
   gradient_accumulate_every: 1
   # EMA destroys performance when used with BatchNorm
   # replace BatchNorm with GroupNorm.
@@ -128,9 +128,9 @@ training:
   tqdm_interval_sec: 1.0
 
 logging:
-  project: diffusion_policy
+  project: diffusion_policy_openwater
   resume: True
-  mode: offline
+  mode: online
   name: ${now:%Y.%m.%d-%H.%M.%S}_${name}_${task_name}
   tags: ["${name}", "${task_name}", "${exp_name}"]
   id: null
