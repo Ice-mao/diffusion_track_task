@@ -17,7 +17,6 @@ import dill
 import wandb
 import json
 from diffusion_policy.workspace.base_workspace import BaseWorkspace
-from diffusion_policy.env_runner.track_image_runner import TrackImageRunner
 
 @click.command()
 @click.option('-c', '--checkpoint', required=True)
@@ -44,19 +43,22 @@ def main(checkpoint, output_dir, device):
     device = torch.device(device)
     policy.to(device)
     policy.eval()
-
-    env_runner = TrackImageRunner(output_dir='output')
+    
+    # run eval
+    env_runner = hydra.utils.instantiate(
+        cfg.task.env_runner,
+        output_dir=output_dir)
     runner_log = env_runner.run(policy)
     
     # dump log to json
-    # json_log = dict()
-    # for key, value in runner_log.items():
-    #     if isinstance(value, wandb.sdk.data_types.video.Video):
-    #         json_log[key] = value._path
-    #     else:
-    #         json_log[key] = value
-    # out_path = os.path.join(output_dir, 'eval_log.json')
-    # json.dump(json_log, open(out_path, 'w'), indent=2, sort_keys=True)
+    json_log = dict()
+    for key, value in runner_log.items():
+        if isinstance(value, wandb.sdk.data_types.video.Video):
+            json_log[key] = value._path
+        else:
+            json_log[key] = value
+    out_path = os.path.join(output_dir, 'eval_log.json')
+    json.dump(json_log, open(out_path, 'w'), indent=2, sort_keys=True)
 
 if __name__ == '__main__':
     main()

@@ -96,12 +96,12 @@ def get_imitation_episode(folder_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="生成模拟数据并保存为zarr格式")
-    parser.add_argument('--mode', '-m', default='add', choices=['create', 'add'],
+    parser.add_argument('--mode', '-m', default='create', choices=['create', 'add'],
                         help='输出的zarr文件路径')
     args = parser.parse_args()
-    output_path = "data/track/track_dam_test_replay.zarr"
+    output_path = "data/track/track_openwater_test_replay.zarr"
     
-    dataset_path = os.path.join("/data/log/sample/trajs_manual/")
+    dataset_path = os.path.join("/data/log/sample/trajs_manual/openwater/")
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     if args.mode == 'create':
