@@ -176,6 +176,7 @@ class DiffusionUnetImagePolicy(BaseImagePolicy):
         
         # unnormalize prediction
         naction_pred = nsample[...,:Da]
+        action_pred = naction_pred
         # action_pred = self.normalizer['action'].unnormalize(naction_pred)
 
         # get action

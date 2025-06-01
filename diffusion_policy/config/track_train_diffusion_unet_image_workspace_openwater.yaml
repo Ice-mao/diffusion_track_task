@@ -10,7 +10,7 @@ shape_meta: ${task.shape_meta}
 exp_name: "default"
 
 horizon: 16
-n_obs_steps: 2
+n_obs_steps: 4
 n_action_steps: 8 # 1s
 n_latency_steps: 0
 dataset_obs_steps: ${n_obs_steps}
@@ -31,7 +31,7 @@ policy:
     beta_schedule: squaredcos_cap_v2
     variance_type: fixed_small # Yilun's paper uses fixed_small_log instead, but easy to cause Nan
     clip_sample: True # required when predict_epsilon=False
-    prediction_type: epsilon # or sample
+    prediction_type: sample # or sample/epsilon
 
   obs_encoder:
     _target_: diffusion_policy.model.vision.multi_image_obs_encoder.MultiImageObsEncoder
@@ -81,14 +81,14 @@ ema:
   max_value: 0.9999
 
 dataloader:
-  batch_size: 128
+  batch_size: 64
   num_workers: 8
   shuffle: True
   pin_memory: True
   persistent_workers: False
 
 val_dataloader:
-  batch_size: 128
+  batch_size: 64
   num_workers: 8
   shuffle: False
   pin_memory: True
@@ -109,7 +109,11 @@ training:
   # optimization
   lr_scheduler: cosine
   lr_warmup_steps: 500
+<<<<<<< HEAD
   num_epochs: 10000
+=======
+  num_epochs: 3000
+>>>>>>> 0632c20580cb099cf3b4668e7fa21633479a8ac1
   gradient_accumulate_every: 1
   # EMA destroys performance when used with BatchNorm
   # replace BatchNorm with GroupNorm.
