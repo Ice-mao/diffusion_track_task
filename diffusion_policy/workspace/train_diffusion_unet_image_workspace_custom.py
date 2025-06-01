@@ -15,7 +15,6 @@ import pathlib
 from torch.utils.data import DataLoader
 import copy
 import random
-import wandb
 import tqdm
 import numpy as np
 import shutil
@@ -111,16 +110,32 @@ class TrainDiffusionUnetImageWorkspace(BaseWorkspace):
         # assert isinstance(env_runner, BaseImageRunner)
 
         # configure logging
-        wandb_run = wandb.init(
-            dir=str(self.output_dir),
-            config=OmegaConf.to_container(cfg, resolve=True),
-            **cfg.logging
-        )
-        wandb.config.update(
-            {
-                "output_dir": self.output_dir,
-            }
-        )
+        # TODO
+        print()
+        if cfg.logging.repo == 'wandb':
+            print("Using wandb for logging")
+            import wandb
+            wandb_run = wandb.init(
+                dir=str(self.output_dir),
+                config=OmegaConf.to_container(cfg, resolve=True),
+                **cfg.logging
+            )
+            wandb.config.update(
+                {
+                    "output_dir": self.output_dir,
+                }
+            )
+        elif cfg.logging.repo == 'swanlab':
+            print("Using swanlab for logging")
+            import swanlab
+            wandb_run = swanlab.init(
+                project=cfg.logging.project,
+                experiment_name = cfg.logging.name,
+                logdir=str(self.output_dir),
+                config=OmegaConf.to_container(cfg, resolve=True),
+            )
+        else:
+            raise ValueError(f"Unknown logging repo {cfg.logging.repo}")
 
         # configure checkpoint
         topk_manager = TopKCheckpointManager(

@@ -109,7 +109,7 @@ training:
   # optimization
   lr_scheduler: cosine
   lr_warmup_steps: 500
-  num_epochs: 8000
+  num_epochs: 10000
   gradient_accumulate_every: 1
   # EMA destroys performance when used with BatchNorm
   # replace BatchNorm with GroupNorm.
@@ -128,6 +128,7 @@ training:
   tqdm_interval_sec: 1.0
 
 logging:
+  repo: swanlab  # swanlab / wandb
   project: diffusion_policy_openwater
   resume: True
   mode: online
