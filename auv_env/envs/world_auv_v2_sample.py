@@ -23,7 +23,7 @@ class WorldAuvV2Sample(WorldBase):
         different from world:target is also an auv
     """
 
-    def __init__(self, map, show, verbose, num_targets, **kwargs):
+    def __init__(self, map, show, num_targets, verbose=1, **kwargs):
         self.obs = {}
         self.left_camera_buffer = ImageBuffer(2, (3, 224, 224), time_gap=0.05, type="camera")
         self.right_camera_buffer = ImageBuffer(2, (3, 224, 224), time_gap=0.05, type="camera")
@@ -82,7 +82,7 @@ class WorldAuvV2Sample(WorldBase):
         self.right_camera_buffer.reset()
         self.sonar_buffer.reset()
         
-        self.ocean.reset()
+        # self.ocean.reset()
         # if METADATA['render']:
         #     self.ocean.draw_box(self.center.tolist(), (self.size / 2).tolist(), color=[0, 0, 255], thickness=30,
         #                         lifetime=0)  # draw the area
